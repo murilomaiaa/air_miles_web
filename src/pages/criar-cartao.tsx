@@ -3,13 +3,13 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
-import {  FormEvent, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import * as Yup from 'yup'
 
 
-import { Header, Input, Select } from '../src/components'
-import getValidationErrors from '../src/utils/getValidationErrors'
-import InputMask from '../src/components/InputMask'
+import { Header, Input, Select } from '../components'
+import getValidationErrors from '../utils/getValidationErrors'
+import InputMask from '../components/InputMask'
 
 type FormData = {
   number: string
