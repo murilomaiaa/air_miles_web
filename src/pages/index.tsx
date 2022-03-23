@@ -50,7 +50,7 @@ const Home: NextPage = () => {
             Novo +
           </Button>
         </Flex>
-        <CardList cards={cards}/>
+        <CardList setCards={setCards} cards={cards}/>
       </Container>
     </>
   )
