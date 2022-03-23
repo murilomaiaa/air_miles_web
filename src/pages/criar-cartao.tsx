@@ -10,11 +10,13 @@ import * as Yup from 'yup'
 import { Header, Input, Select } from '../components'
 import getValidationErrors from '../utils/getValidationErrors'
 import InputMask from '../components/InputMask'
+import { api } from '../services/api'
 
 type FormData = {
   number: string
   cvv: string
   holder_name: string
+  holder_email: string
   expiration_date: string
   brand: string
 }
@@ -45,6 +47,7 @@ const Home: NextPage = () => {
       holder_name: Yup.string()
         .matches(/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g, 'Insira apenas letras')
         .required('Informe o nome no cartão'),
+      holder_email: Yup.string().email().required(),
       number: Yup.string()
         .length(16, 'O cartão precisa ter 16 dígitos')
         .required('Número é obrigatório'),
@@ -77,7 +80,21 @@ const Home: NextPage = () => {
       const err = getValidationErrors(e)
       formRef.current?.setErrors(err)
     })
-  }, [])
+
+    api.post('/cards', {
+      number: data.number,
+      expiration: data.expiration_date,
+      cvv: "567",
+      creditCardCompany: {
+        name: data.brand
+      },
+      holderName: data.holder_name,
+      holderEmail: data.holder_email,
+    }).then(() => {
+      router.push('/')
+    }).catch(console.log)
+
+  }, [router])
 
   const goToIndex = useCallback(() => {
     router.push('/')
@@ -110,10 +127,13 @@ const Home: NextPage = () => {
               <InputMask label='Número' name='number' mask="9999 9999 9999 9999" maskPlaceholder={''} />
             </GridItem>
             <GridItem colSpan={{ base: 2 }}>
+              <InputMask mask={'99/99'} maskPlaceholder={''} label='Validade' name='expiration_date' />
+            </GridItem>
+            <GridItem colSpan={{ base: 2 }}>
               <Input label='Nome' name='holder_name'/>
             </GridItem>
             <GridItem colSpan={{ base: 2 }}>
-              <InputMask mask={'99/99'} maskPlaceholder={''} label='Validade' name='expiration_date' />
+              <Input label='Email' name='holder_email'/>
             </GridItem>
             <GridItem colSpan={{ base: 2 }}>
               <InputMask mask={'999'} maskPlaceholder={''} label='CVV' name='cvv' />
