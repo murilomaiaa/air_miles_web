@@ -20,13 +20,17 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      const response = await api.get<CardsResponse>('/cards')
-      console.log({response})
-      setCards(response.data.creditCards.map(c=> ({
-        id: c.id,
-        brand: c.brand,
-        digits: c.last_digits
-      })))
+      try {
+        const response = await api.get<CardsResponse>('/cards')
+        setCards(response.data.creditCards.map(c=> ({
+          id: c.id,
+          brand: c.brand,
+          digits: c.last_digits
+        })))
+      } catch (e: any) {
+        console.log('REQUEST ERROR', { response: e.response, config: e.config })
+        console.log(e)
+      }
     }
     fetch()
   }, [])
